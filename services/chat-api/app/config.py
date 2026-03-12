@@ -14,7 +14,9 @@ class Settings(BaseSettings):
     auth0_role_claim: str = "https://hellosunday.app/role"
 
     hermes_url: str = ""
+    hermes_service_auth_mode: str = "shared_token"
     hermes_internal_token: str = ""
+    hermes_iam_audience: str = ""
     hermes_connect_timeout_s: float = 10.0
     hermes_read_timeout_s: float = 120.0
 
