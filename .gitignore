@@ -50,3 +50,7 @@ skills/.hub/
 ignored/
 .worktrees/
 environments/benchmarks/evals/
+
+# macOS Finder junk
+.DS_Store
+**/.DS_Store
