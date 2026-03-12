@@ -1,0 +1,9 @@
+# Cloud Build source ignore rules
+.gcloudignore
+.git
+.gitignore
+#!include:.gitignore
+
+# Ensure runtime service files are included even though .gitignore has hermes-*/*
+!services/hermes-runtime/**
+!services/chat-api/**
