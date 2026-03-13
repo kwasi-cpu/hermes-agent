@@ -6,7 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends git nodejs npm && rm -rf /var/lib/apt/lists/*
+RUN npm install -g @googleworkspace/cli
 
 COPY requirements.txt /tmp/repo-requirements.txt
 COPY services/hermes-runtime/requirements.txt /tmp/runtime-requirements.txt

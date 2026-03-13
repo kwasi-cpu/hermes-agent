@@ -19,9 +19,25 @@ def test_enabled_toolsets_default_to_safe_when_empty():
     assert resolve_enabled_toolsets(settings) == ["safe"]
 
 
+def test_enabled_toolsets_can_include_dev_gws_toggle():
+    settings = Settings(env="dev", agent_enabled_toolsets="safe", agent_enable_gws_readonly_dev=True)
+    assert resolve_enabled_toolsets(settings) == ["safe", "gws_readonly"]
+
+
+def test_enabled_toolsets_reject_dev_gws_toggle_in_prod():
+    settings = Settings(env="prod", agent_enabled_toolsets="safe", agent_enable_gws_readonly_dev=True)
+    with pytest.raises(RuntimeError, match="gws_readonly_dev_only"):
+        resolve_enabled_toolsets(settings)
+
+
 def test_guardrails_allow_safe_toolset_without_confirmation():
     settings = Settings(agent_enabled_toolsets="safe")
     validate_agent_guardrails(settings=settings, req=_request("hello"), enabled_toolsets=["safe"])
+
+
+def test_guardrails_allow_safe_plus_gws_without_confirmation():
+    settings = Settings(agent_enabled_toolsets="safe,gws_readonly")
+    validate_agent_guardrails(settings=settings, req=_request("hello"), enabled_toolsets=["safe", "gws_readonly"])
 
 
 def test_guardrails_require_confirmation_for_unsafe_toolsets():
