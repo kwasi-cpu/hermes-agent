@@ -202,6 +202,12 @@ TOOLSETS = {
         "includes": []
     },
 
+    "gws_readonly": {
+        "description": "Development-only read-only Google Workspace CLI actions",
+        "tools": ["gws_readonly"],
+        "includes": []
+    },
+
 
     # Scenario-specific toolsets
     

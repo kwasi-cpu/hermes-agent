@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     agent_provider: str = "openrouter"
     agent_enabled_toolsets: str = "safe"
     agent_disabled_toolsets: str = ""
+    agent_enable_gws_readonly_dev: bool = False
     agent_max_iterations: int = 20
     agent_max_iterations_cap: int = 20
     agent_enforce_safe_toolset_only: bool = True

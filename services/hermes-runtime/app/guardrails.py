@@ -2,6 +2,9 @@ from app.config import Settings
 from app.models import InternalChatStreamRequest
 
 
+_SAFE_TOOLSET_BASELINE = {"safe", "gws_readonly"}
+
+
 def parse_toolsets(value: str) -> list[str] | None:
     items = [v.strip() for v in (value or "").split(",") if v.strip()]
     return items or None
@@ -9,7 +12,14 @@ def parse_toolsets(value: str) -> list[str] | None:
 
 def resolve_enabled_toolsets(settings: Settings) -> list[str]:
     parsed = parse_toolsets(settings.agent_enabled_toolsets)
-    return parsed or ["safe"]
+    enabled = parsed or ["safe"]
+    if settings.agent_enable_gws_readonly_dev:
+        env = (settings.env or "").strip().lower()
+        if env in {"prod", "production"}:
+            raise RuntimeError("gws_readonly_dev_only")
+        if "gws_readonly" not in enabled:
+            enabled.append("gws_readonly")
+    return enabled
 
 
 def has_explicit_confirmation(*, message: str, phrase: str) -> bool:
@@ -20,7 +30,7 @@ def has_explicit_confirmation(*, message: str, phrase: str) -> bool:
 
 
 def validate_agent_guardrails(*, settings: Settings, req: InternalChatStreamRequest, enabled_toolsets: list[str]) -> None:
-    unsafe_toolsets_enabled = set(enabled_toolsets) != {"safe"}
+    unsafe_toolsets_enabled = not set(enabled_toolsets).issubset(_SAFE_TOOLSET_BASELINE)
     if not unsafe_toolsets_enabled:
         return
 
